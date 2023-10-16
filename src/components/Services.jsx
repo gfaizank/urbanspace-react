@@ -4,6 +4,12 @@ import { Carousel } from 'react-responsive-carousel';
 import Modal from 'react-modal';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import InfiniteImageMarquee from './InfiniteImageMarquee';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import "../styles/Services.css"
+import { useEffect } from 'react';
+import { Button, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const customStyles = {
   content: {
@@ -66,10 +72,23 @@ const brandLogos = [
     'https://logos-download.com/wp-content/uploads/2016/03/Philips_logo_blue.png',
 
 
-  ];
-  
+];
+
 
 const Services = () => {
+
+  const [data,setData]=useState([])
+  const [service,setService]=useState()
+  const [openServiceDetails,setServiceDetails]=useState(false)
+  const [isDescopen,setIsDescOpen]=useState(false)
+  const [isOpen, setIsOpen] = useState({});
+
+  const toggleOpen = (category) => {
+    setIsOpen({
+      ...isOpen,
+      [category]: !isOpen[category],
+    });
+  };
 
     const logosPerSlideDesktop = 4; // Number of logos to display per slide for desktop
 const logosPerSlideMobile = 3;  // Number of logos to display per slide for mobile
@@ -86,7 +105,7 @@ for (let i = 0; i < totalSlidesDesktop; i++) {
   const slideLogos = brandLogos.slice(startIdx, endIdx);
 
   slides.push(
-    <div key={i} className="hidden sm:flex space-x-4"> {/* Show for desktop screens */}
+    <div key={i} className="hidden sm:flex space-x-4" > {/* Show for desktop screens */}
       {slideLogos.map((logo, index) => (
         <div key={index} className="w-1/4">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -144,28 +163,61 @@ for (let i = 0; i < totalSlidesMobile; i++) {
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+  const ImageUrls = [
+    "https://example.com/image1.jpg",
+    "https://example.com/image2.jpg",
+    "https://example.com/image3.jpg",
+  ];
+
+
+    
+const servicesFetch= async()=>{
+  await fetch('https://wm-backend--connecturbanspa.repl.co/api/services') // Replace with your API endpoint
+  .then((response) => response.json())
+  .then((responseData) => {
+    setData(responseData.api_data);
+  })
+  .catch((error) => {
+    console.error('Error fetching data:', error);
+  });
+}
+
+useEffect(()=>{
+servicesFetch();
+},[])
+  
 
   return (
-    <div className="container mx-auto p-4 bg-black text-white">
+    <div className="container mx-auto p-4 bg-black text-white" >
   <h1 className="text-3xl font-semibold mb-4">Our Services</h1>
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-    {servicesData.map((service, index) => (
+    {data.map((service, index) => (
       <div
         key={index}
-        onClick={() => handleServiceClick(service)}
-        className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 hover:shadow-xl text-black cursor-pointer"
+        onClick={() => {
+          // handleServiceClick(service)
+          setService(service.services)
+          setServiceDetails(true)
+        }}
+       
+        
+
+        // className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 hover:shadow-xl text-black cursor-pointer"
+        className='bg-white rounded-lg text-black cursor-pointer hover:shadow-xl shadow-lg'
       >
-        <img src={service.image} alt={service.title} className="w-full h-40 object-cover" />
+        <img src={service.img} alt={service.title} className="w-full h-40 object-cover" style={{
+          borderRadius:10
+        }} />
         <div className="p-4">
           <h2 className="text-xl font-semibold mb-2">{service.title}</h2>
-          <p className="text-gray-300">{service.description}</p>
+          <p className="text-gray-300">{service.desc.slice(0,100)}...</p>
         </div>
       </div>
     ))}
   </div>
 
 
-      <Modal
+      {/* <Modal
   isOpen={isModalOpen}
   onRequestClose={closeModal}
   style={customStyles}
@@ -271,21 +323,128 @@ for (let i = 0; i < totalSlidesMobile; i++) {
       Close
     </button>
   </div>
+</Modal> */}
+
+<Modal  isOpen={openServiceDetails}  onRequestClose={closeModal} >
+  <div style={{
+    justifyContent:'flex-end',
+    display:'flex',
+    flexDirection:'row',
+    padding:0,
+   
+  }}>
+<IconButton onClick={()=>{
+ setServiceDetails()
+}}>
+<CloseIcon fontSize='large' color='white' style={{
+      background:'black',
+      color:'#fff',
+      borderRadius:50,
+      padding:5
+    }}></CloseIcon>
+</IconButton>
+  </div>
+{
+  service?.map((service,index)=>{
+ return (
+  <div>
+   <div style={{
+    padding:10,
+    // background:'red',
+    display:'flex',
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    borderBottom:'1px solid #D3D3D3'
+   }}>
+   <h1 key={index} style={{
+    fontSize:20,
+    fontWeight:'600'
+   }}>{service?.service_title}</h1>
+  <IconButton onClick={()=>{
+    setIsDescOpen(!isDescopen)
+  }}>
+  <KeyboardArrowDownIcon fontSize="large" style={{
+    background:'black',
+    color:'white'
+  }}></KeyboardArrowDownIcon>
+  </IconButton>
+   </div>
+  <div>
+
+    {
+      isDescopen?(
+        <>
+<div style={{
+  padding:10,
+  display:'flex',
+  justifyContent:'space-between',
+  alignItems:'center',
+  flexDirection:'row'
+ }}>
+ <h2 key={index} style={{
+  // marginRight:'10%'
+  width:'70%'
+ }}>{service?.service_desc}</h2>
+ <Button style={{
+  width:'150px',
+  background:'black',
+  color:'white'
+ }}>Add to cart</Button>
+ </div>
+
+<div style={{
+  padding:10
+}}>
+ {service.isfixed?(
+  <h1 style={{
+    fontWeight:'600'
+  }}>Price Rs {service.price}</h1>
+ ):(
+  <h1 style={{
+    fontWeight:'600'
+  }}>Starts From Rs {service.price}</h1>
+ )}
+</div>
+</>
+      ):(
+        <></>
+      )
+    }
+ 
+  </div>
+
+ 
+  </div>
+ )
+  })
+}
 </Modal>
 
 
        {/* Carousel section */}
        <div className="mt-8">
         <h2 className="text-3xl font-semibold mb-4">Brands we deal with</h2>
-        <Carousel
-          showArrows={true}
-          infiniteLoop={true}
-          showThumbs={false}
-          showStatus={false}
-        >
-          {slides}
-        </Carousel>
-      </div>
+        <div class="marquee">
+         <div class="track">
+         <div class="content">
+        {
+          brandLogos?.map((logo,index)=>{
+            return <img src={`${logo}`} key={index} style={{
+              width:150,
+              margin:10
+            }}></img>
+          })
+
+        }
+        {/* <img src='https://vectorseek.com/wp-content/uploads/2021/01/Godrej-Logo-Vector.jpg' style={{
+          width:50,height:50
+        }}></img> */}
+        
+         </div>
+         </div>
+          </div>
+         </div>
 
       
     </div>

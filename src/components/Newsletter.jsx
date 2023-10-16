@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -16,9 +16,8 @@ const Newsletter = () => {
 
 
 
-  const subscribe = () => {
-    
-    fetch('https://urban-space-backend.priteshkr.repl.co/subscribe', {
+  const subscribe = async () => { 
+   await fetch('https://wm-backend.connecturbanspa.repl.co/subscribe', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -26,18 +25,31 @@ const Newsletter = () => {
       body: JSON.stringify({ email }),
     })
       .then((response) => {
+        console.log('Subscription successful!')
+        toast("Email Sent!");
+        setEmail("")
         if (response.ok) {
           setSubscriptionStatus('Subscription successful!');
+          console.log('Subscription successful!')
         } else {
           setSubscriptionStatus('Subscription failed. Please try again later.');
+          console.log('Subscription failed. Please try again later.')
         }
       })
       .catch((error) => {
         console.error('Error subscribing to newsletter:', error);
+        console.log(error)
         setSubscriptionStatus('Subscription failed. Please try again later.');
       });
   };
 
+
+  
+
+  // const notify = () => toast("Wow so easy!");
+  // useEffect(()=>{
+  //   toast("Email Sent!");
+  // },[])
 
   return (
     <div className='w-full py-16 text-white px-4'>
@@ -65,13 +77,16 @@ const Newsletter = () => {
               Notify Me
             </button>
           </div>
-          {subscriptionStatus && <p>{subscriptionStatus}</p>}
+          {subscriptionStatus && <p style={{
+            color:'white'
+          }}>{subscriptionStatus}</p>}
           <p>
             We care about the protection of your data. Read our{' '}
             <span className='text-[#00df9a]'>Privacy Policy.</span>
           </p>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

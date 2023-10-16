@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
+import Logo from '../../src/assets/Urban_Space_official_logo.png'
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
@@ -10,8 +11,18 @@ const Navbar = () => {
   };
 
   return (
-    <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white'>
-      <h1 className='w-full text-3xl font-bold text-[#00df9a]'>Urban Space</h1>
+    <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white' style={{
+      zIndex:111
+    }}>
+      <div style={{
+        background:'#fff',
+        padding:5
+
+      }}>
+        <img src={Logo} style={{
+          width:100
+        }}></img>
+      </div>
       <ul className='hidden md:flex'>
         <Link to="/" className='p-4'>Home</Link>
         <Link to="/login" className='p-4'>Login</Link>

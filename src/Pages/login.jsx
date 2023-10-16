@@ -1,7 +1,50 @@
 import React from 'react';
-
+import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+
+ 
+
+  const login = async (e) => { 
+    e.preventDefault();
+
+    await fetch('https://wm-backend.connecturbanspa.repl.co/client/login', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         "Access-Control-Allow-Origin": "*"
+       },
+       body: JSON.stringify(formData),
+     })
+       .then((response) => {
+         console.log('Login successful!',response)
+         toast("Login Success");
+         setFormData({
+          email: '',
+          password: ''
+         })
+       })
+       .catch((error) => {
+         console.error('Error subscribing to newsletter:', error);
+         console.log(error)
+         
+       });
+   };
+
+
+   const handleChange = (e) => {
+    // Update the corresponding field in the state
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
   return (
     //bg-[#1e2a38]
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8 bg-[rgb(8,8,8)] text-white">
@@ -17,7 +60,7 @@ const LoginForm = () => {
   </div>
 
   <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-    <form className="space-y-6" action="#" method="POST">
+    <form className="space-y-6" >
       <div>
         <label htmlFor="email" className="block text-sm font-medium leading-6 text-[#00df9a]">
           Email address
@@ -29,6 +72,8 @@ const LoginForm = () => {
             type="email"
             autoComplete="email"
             required
+            value={formData.email}
+            onChange={handleChange}
             className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-#00df9a focus:border-#00df9a sm:text-sm sm:leading-5"
           />
         </div>
@@ -50,6 +95,8 @@ const LoginForm = () => {
             id="password"
             name="password"
             type="password"
+            value={formData.password}
+            onChange={handleChange}
             autoComplete="current-password"
             required
             className="block w-full rounded-md border border-gray-300 py-2 px-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-#00df9a focus:border-#00df9a sm:text-sm sm:leading-5"
@@ -59,6 +106,10 @@ const LoginForm = () => {
 
       <div>
         <button
+        disabled={formData.email==" " || formData.password ==""?true:false}
+        onClick={(e)=>{
+          login(e)
+        }}
           type="submit"
           className=" flex w-full justify-center rounded-md bg-[#00df9a] hover:bg-[#00c088] text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a] mx-auto"
         >
