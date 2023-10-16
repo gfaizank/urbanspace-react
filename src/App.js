@@ -11,6 +11,9 @@ import SignupPage from './Pages/SignupPage';
 import LoginPage from './Pages/LoginPage';
 import Home from './Pages/Homepage';
 import ServicePage from './Pages/ServicePage';
+import CartPage from './Pages/CartPage';
+import ProfilePage from './Pages/ProfilePage';
+import BookingsPage from './Pages/BookingsPage';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -47,6 +50,18 @@ const router = createBrowserRouter([
     path: "/services",
     element: <ServicePage></ServicePage>,
   },
+  {
+    path: "/cartPage",
+    element: <CartPage></CartPage>,
+  },
+  {
+    path: "/profilePage",
+    element: <ProfilePage></ProfilePage>,
+  },
+  {
+  path: "/bookingsPage",
+  element: <BookingsPage></BookingsPage>,
+  },
   
 ]);
 
@@ -72,6 +87,9 @@ function App() {
     <Signup />
     <Footer /> */}
     <RouterProvider router={router} />
+
+
+    
     
     
 

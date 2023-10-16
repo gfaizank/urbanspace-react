@@ -5,6 +5,7 @@ import {
   FaGithubSquare,
   FaInstagram,
   FaTwitterSquare,
+  FaCopyright
 } from 'react-icons/fa';
 
 const Footer = () => {
@@ -23,17 +24,21 @@ const Footer = () => {
       </div>
       <div className='lg:col-span-2 flex justify-between mt-6'>
     <div>
-        <h6 className='font-medium text-gray-400'>Repairs & Services</h6>
+        <h6 className='font-medium mb-2 text-gray-400'>Company</h6>
         <ul>
-            <li className='py-2 text-sm'>Air Conditioners</li>
-            <li className='py-2 text-sm'>Refrigerators</li>
-            <li className='py-2 text-sm'>Washing Machine</li>
-            <li className='py-2 text-sm'>Television</li>
-            <li className='py-2 text-sm'>Microwave Oven</li>
-            <li className='py-2 text-sm'>Water Purifier</li>
+            <li className='py-1 text-sm'>About us</li>
+            <li className='py-1 text-sm'>Our Services</li>
+            <li className='py-1 text-sm'>Terms & Conditions</li>
+            <li className='py-1 text-sm'>Privacy Policy</li>
+            <li className='py-1 text-sm'>Anti-Discrimination Policy</li>
+            <li className='py-1 text-sm'>Contact us</li>
         </ul>
     </div>
-    <div>
+
+    
+
+    
+    {/* <div>
         <h6 className='font-medium text-gray-400'>My Account</h6>
         <ul>
             <li className='py-2 text-sm'>Login</li>
@@ -60,8 +65,13 @@ const Footer = () => {
             <li className='py-2 text-sm'>Policy</li>
             <li className='py-2 text-sm'>Terms & Conditions</li>
         </ul>
-    </div>
-      </div>
+  </div> */}
+      </div> 
+      <div className="text-left text-sm mt-4">
+    <p>&copy; {new Date().getFullYear()} Urban Space. All Rights Reserved.</p>
+  </div>
+
+      <div className="h-10" /> {/* Adjust the height as needed */}
     </div>
   );
 };

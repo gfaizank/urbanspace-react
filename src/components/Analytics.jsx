@@ -17,7 +17,7 @@ appliances. Our team of experts are well-
 equipped to handle any issue and get your
 appliance back up and running in no time.
           </p>
-          <button className='bg-black text-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto md:mx-0 py-3'>Schedule a service</button>
+          <button className='bg-gray-700 text-[#00df9a] w-[200px] rounded-md font-medium my-6 mx-auto md:mx-0 py-3'>Schedule a service</button>
         </div>
       </div>
     </div>
