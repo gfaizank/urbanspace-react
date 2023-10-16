@@ -1,5 +1,4 @@
 import React from "react";
-import Analytics from "./components/Analytics";
 import Cards from "./components/Cards";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
@@ -10,7 +9,12 @@ import AboutPage from "./Pages/AboutPage";
 import SignupPage from "./Pages/SignupPage";
 import LoginPage from "./Pages/LoginPage";
 import Home from "./Pages/Homepage";
+
+import Analytics from "./components/Analytics";
 import ServicePage from "./Pages/ServicePage";
+import CartPage from "./Pages/CartPage";
+import ProfilePage from "./Pages/ProfilePage";
+import BookingsPage from "./Pages/BookingsPage";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -42,6 +46,18 @@ const router = createBrowserRouter([
   {
     path: "/services",
     element: <ServicePage></ServicePage>,
+  },
+  {
+    path: "/cartPage",
+    element: <CartPage></CartPage>,
+  },
+  {
+    path: "/profilePage",
+    element: <ProfilePage></ProfilePage>,
+  },
+  {
+    path: "/bookingsPage",
+    element: <BookingsPage></BookingsPage>,
   },
 ]);
 

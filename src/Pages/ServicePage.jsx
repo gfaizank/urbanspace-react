@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Reviews from '../components/Reviews';
 import axios from 'axios'
 
+import MobileNavbar from '../components/MobileNavbar';
 
 const ServicePage = () => {
     const [data,setData]=useState([]);
@@ -80,6 +81,7 @@ const ServicePage = () => {
             </div>
      
             <Footer />
+            <MobileNavbar />
         </div>
     );
 }

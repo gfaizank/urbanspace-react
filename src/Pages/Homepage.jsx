@@ -13,6 +13,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import Banner from '../components/Banner';
 import Banner1Img from '../assets/banner1.jpeg';
 import Banner2Img from '../assets/banner2.jpeg'
+import MobileNavbar from '../components/MobileNavbar';
 const Home = () => {
   const [data,setData]=useState([]);
   const [searchData,setSearchData]=useState([]);
@@ -196,7 +197,7 @@ useEffect(()=>{
       <div style={{
         position:"fixed",
         right:10,
-        bottom:"5%",
+        bottom:"15%",
         display:'flex',
         flexDirection:'column'
       }}>
@@ -218,6 +219,11 @@ useEffect(()=>{
         </div>
       </div>
       <Footer />
+
+
+    
+      <MobileNavbar />
+    
         </div>
     );
 }
