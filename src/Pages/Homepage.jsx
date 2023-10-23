@@ -1,231 +1,453 @@
-import React from 'react';
-import Analytics from '../components/Analytics';
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import Newsletter from '../components/Newsletter';
-import Cards from '../components/Cards';
-import Footer from '../components/Footer';
-import Reviews from '../components/Reviews';
-import { useState,useEffect } from 'react';
+import React from "react";
+import Analytics from "../components/Analytics";
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Newsletter from "../components/Newsletter";
+import Cards from "../components/Cards";
+import Footer from "../components/Footer";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Reviews from "../components/Reviews";
+import { useState, useEffect } from "react";
+import Modal from "react-modal";
+import { Button, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import Banner from "../components/Banner";
+import Banner1Img from "../assets/banner1.jpeg";
+import Banner2Img from "../assets/banner2.jpeg";
+import MobileNavbar from "../components/MobileNavbar";
 
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import Banner from '../components/Banner';
-import Banner1Img from '../assets/banner1.jpeg';
-import Banner2Img from '../assets/banner2.jpeg'
-import MobileNavbar from '../components/MobileNavbar';
 const Home = () => {
-  const [data,setData]=useState([]);
-  const [searchData,setSearchData]=useState([]);
-  const [searchQuery,setSearchQuery]=useState('')
+  const [data, setData] = useState([]);
+  const [searchData, setSearchData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [service, setService] = useState();
+  const [openServiceDetails, setServiceDetails] = useState(false);
+  const [isDescopen, setIsDescOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
-const fetchReviews=async ()=>{
-    await fetch('https://wm-backend--connecturbanspa.repl.co/api/review') // Replace with your API endpoint
-.then((response) => response.json())
-.then(async(responseData) => {
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const fetchReviews = async () => {
+    await fetch("https://wm-backend--connecturbanspa.repl.co/api/review") // Replace with your API endpoint
+      .then((response) => response.json())
+      .then(async (responseData) => {
+        await setData(responseData.reviews);
+        console.log(responseData.reviews);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
-await setData(responseData.reviews);
-console.log(responseData.reviews)
-})
-.catch((error) => {
-console.error('Error fetching data:', error);
-});
-}
-useEffect(()=>{
-      fetchReviews();
-},[])
+  const search = async (searchQuery) => {
+    await fetch(
+      `https://wm-backend--connecturbanspa.repl.co/api/services?category=${searchQuery}`
+    ) // Replace with your API endpoint
+      .then((response) => response.json())
+      .then(async (responseData) => {
+        await setSearchData(responseData.api_data);
+        console.log(responseData.api_data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      search(searchQuery);
+    }
+  }, [searchQuery]);
 
-const search=async (searchQuery)=>{
-  await fetch(`https://wm-backend--connecturbanspa.repl.co/api/services?category=${searchQuery}`) // Replace with your API endpoint
-.then((response) => response.json())
-.then(async(responseData) => {
+  const addToCart = async (service) => {
+    await fetch(
+      "https://wm-backend.connecturbanspa.repl.co/client/ram@gmail.com/addtocart",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          service_title: service?.service_title,
+          service_desc: service?.service_desc,
+          price: service?.price,
+          isfixed: `${service?.isfixed}`,
+          ispaid: false,
+        }),
+      }
+    )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("Error :", error);
+        console.log(error);
+      });
+  };
 
-await setSearchData(responseData.api_data);
-console.log(responseData.api_data)
-})
-.catch((error) => {
-console.error('Error fetching data:', error);
-});
-}
+  return (
+    <div>
+      <Modal isOpen={openServiceDetails} onRequestClose={closeModal}>
+        <div
+          style={{
+            justifyContent: "flex-end",
+            display: "flex",
+            flexDirection: "row",
+            padding: 0,
+          }}
+        >
+          <IconButton
+            onClick={() => {
+              setServiceDetails();
+            }}
+          >
+            <CloseIcon
+              fontSize="small"
+              color="white"
+              style={{
+                background: "black",
+                color: "#fff",
+                borderRadius: 50,
+                padding: 5,
+              }}
+            ></CloseIcon>
+          </IconButton>
+        </div>
+        {service?.map((service, index) => {
+          return (
+            <div>
+              <div
+                style={{
+                  padding: 10,
+                  // background:'red',
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  borderBottom: "1px solid #D3D3D3",
+                }}
+              >
+                <h1
+                  key={index}
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "600",
+                  }}
+                >
+                  {service?.service_title}
+                </h1>
+                <IconButton
+                  onClick={() => {
+                    setIsDescOpen(!isDescopen);
+                  }}
+                >
+                  <KeyboardArrowDownIcon
+                    fontSize="small"
+                    style={{
+                      background: "black",
+                      color: "white",
+                    }}
+                  ></KeyboardArrowDownIcon>
+                </IconButton>
+              </div>
+              <div>
+                {isDescopen ? (
+                  <>
+                    <div
+                      style={{
+                        padding: 10,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <img
+                          src={service?.service_img}
+                          style={{
+                            width: "100px",
+                          }}
+                        ></img>
+                        <h2
+                          key={index}
+                          style={{
+                            // marginRight:'10%'
+                            width: "70%",
+                            marginLeft: "10px",
+                          }}
+                        >
+                          {service?.service_desc}
+                        </h2>
+                      </div>
+                      <Button
+                        style={{
+                          width: "110px",
+                          background: "black",
+                          color: "white",
+                          fontSize: 10,
+                        }}
+                        onClick={() => {
+                          addToCart(service);
+                        }}
+                      >
+                        Add to cart
+                      </Button>
+                    </div>
 
-useEffect(()=>{
- if(searchQuery.length>0){
-  search(searchQuery)
- }
-},[searchQuery])
+                    <div
+                      style={{
+                        padding: 10,
+                      }}
+                    >
+                      {service.isfixed ? (
+                        <h1
+                          style={{
+                            fontWeight: "600",
+                          }}
+                        >
+                          Price Rs {service.price}
+                        </h1>
+                      ) : (
+                        <h1
+                          style={{
+                            fontWeight: "600",
+                          }}
+                        >
+                          Starts From Rs {service.price}
+                        </h1>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </Modal>
 
-    return (
-        <div>
       <Navbar />
-      {window.innerWidth<500?(
-      <div style={{
-        display:'flex',
-        flexDirection:'column',
-        alignItems:'center',
-        justifyContent:'center',
-      
-      }}>
-          <input placeholder='Search something...' style={{
-          padding:10,
-          borderWidth:1,
-          borderColor:'#fff',
-          width:'90%',
-          // borderRadius:5,
-          outline:'none',
-          fontWeight:'500',
-          fontSize:15
-          
-        }}
-        onChange={(e)=>{
-          setSearchQuery(e.target.value)
-        }}
-        value={searchQuery}
-        ></input>
-       {
-        searchData?.length<1 && searchQuery.length>0?(
-          <div style={{
-            width:'90%',
-            background:'white',
-            marginTop:5
-         }}>
-           {
-           <h1 style={{
-                 color:'#000',
-                 fontWeight:'500',
-                 fontSize:15,
-                 padding:10
-               }}>No Result Found</h1>
-             
-           }
-         </div>
-        ):(
-          <div style={{
-            width:'90%',
-            background:'white',
-            marginTop:5
-         }}>
-           {
-             searchData?.map((data,index)=>{
-               return <h1 key={index} style={{
-                 color:'#000',
-                 fontWeight:'500',
-                 fontSize:15,
-                 padding:10
-               }}>{data?.title}</h1>
-             })
-           }
-         </div>
-        )
-       }
-      </div>
-      ):(
+      {window.innerWidth < 500 ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <input
+            placeholder="Search something..."
+            style={{
+              padding: 10,
+              borderWidth: 1,
+              borderColor: "#fff",
+              width: "90%",
+              // borderRadius:5,
+              outline: "none",
+              fontWeight: "500",
+              fontSize: 15,
+            }}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+            }}
+            value={searchQuery}
+          ></input>
+          {searchData?.length < 1 && searchQuery.length > 0 ? (
+            <div
+              style={{
+                width: "90%",
+                background: "white",
+                marginTop: 5,
+              }}
+            >
+              {
+                <h1
+                  style={{
+                    color: "#000",
+                    fontWeight: "500",
+                    fontSize: 15,
+                    padding: 10,
+                  }}
+                >
+                  No Result Found
+                </h1>
+              }
+            </div>
+          ) : (
+            <div
+              onClick={() => {
+                // setService(service.services);
+                setServiceDetails(true);
+              }}
+              style={{
+                width: "90%",
+                background: "white",
+                marginTop: 5,
+              }}
+            >
+              {searchData?.map((data, index) => {
+                return (
+                  <h1
+                    key={index}
+                    style={{
+                      color: "#000",
+                      fontWeight: "500",
+                      fontSize: 15,
+                      padding: 10,
+                    }}
+                    onClick={() => {
+                      setService(data?.services);
+                      console.log(data);
+                    }}
+                  >
+                    {data?.title}
+                  </h1>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
         <></>
       )}
       <Hero />
-      {
-        window.innerWidth<500?(
-          <div style={{
-            paddingLeft:"5%",
-            paddingRight:'5%',
-            justifyContent:'center',
-            alignItems:'center',
-            display:'flex',
-            flexDirection:'column',
+      {window.innerWidth < 500 ? (
+        <div
+          style={{
+            paddingLeft: "5%",
+            paddingRight: "5%",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
             // marginTop:10,
-            marginBottom:20
-          }}>
-            <div className='flex items-center'>
-            <p className=' text-customTwo p-3  '>Buy Products</p>
-            <div className=' bg-customTwo h-0.5 w-40 ml-1 '></div>
-        </div>
-            
-          <Banner img={Banner1Img}></Banner>
+            marginBottom: 20,
+          }}
+        >
+          <div className="flex items-center">
+            <p className=" text-customTwo p-3  ">Buy Products</p>
+            <div className=" bg-customTwo h-0.5 w-40 ml-1 "></div>
           </div>
-        ):(
-          <></>
-        )
-      }
+
+          <Banner img={Banner1Img}></Banner>
+        </div>
+      ) : (
+        <></>
+      )}
       <Analytics />
 
-      {
-        window.innerWidth<500?(
-          <div style={{
-            paddingLeft:"5%",
-            paddingRight:'5%',
-            justifyContent:'center',
-            alignItems:'center',
-            display:'flex',
-            flexDirection:'column',
+      {window.innerWidth < 500 ? (
+        <div
+          style={{
+            paddingLeft: "5%",
+            paddingRight: "5%",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
             // marginTop:10,
-            marginBottom:20
-          }}>
-              <div className='flex items-center'>
-            <p className=' text-customTwo p-3  '>Buy Products</p>
-            <div className=' bg-customTwo h-0.5 w-40 ml-1 '></div>
-        </div>
-          <Banner img={Banner2Img}></Banner>
+            marginBottom: 20,
+          }}
+        >
+          <div className="flex items-center">
+            <p className=" text-customTwo p-3  ">Buy Products</p>
+            <div className=" bg-customTwo h-0.5 w-40 ml-1 "></div>
           </div>
-        ):(
-          <></>
-        )
-      }
+          <Banner img={Banner2Img}></Banner>
+        </div>
+      ) : (
+        <></>
+      )}
 
       <Newsletter />
       {/* <Cards /> */}
-      <div style={{
-        paddingTop:10,
-        paddingBottom:10
-      }}>
-        <div style={{
-          paddingTop:10,
-          paddingBottom:20,
-          alignItems:'center',
-          justifyContent:'center',
-          display:'flex'
-        }}>
-          <h1 style={{
-            color:'#fff',
-            fontSize:40
-          }}>Our Customer Reviews</h1>
+      <div
+        style={{
+          paddingTop: 10,
+          paddingBottom: 10,
+        }}
+      >
+        <div
+          style={{
+            paddingTop: 10,
+            paddingBottom: 20,
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <h1
+            style={{
+              color: "#fff",
+              fontSize: 40,
+            }}
+          >
+            Our Customer Reviews
+          </h1>
         </div>
-      <Reviews users={data} interval={3000} ></Reviews>
+        <Reviews users={data} interval={3000}></Reviews>
       </div>
 
-
-      <div style={{
-        position:"fixed",
-        right:10,
-        bottom:"15%",
-        display:'flex',
-        flexDirection:'column'
-      }}>
-        <div style={{
-          background:'white',
-          marginBottom:5
-          // marginRight:5
-        }}>
-        <LocalPhoneIcon fontSize='large' style={{
-          color:'#000'
-        }}></LocalPhoneIcon>
+      <div
+        style={{
+          position: "fixed",
+          right: 10,
+          bottom: "15%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div
+          style={{
+            background: "white",
+            marginBottom: 5,
+            // marginRight:5
+          }}
+        >
+          <LocalPhoneIcon
+            fontSize="large"
+            style={{
+              color: "#000",
+            }}
+          ></LocalPhoneIcon>
         </div>
-        <div style={{
-          background:'white'
-        }}>
-        <WhatsAppIcon fontSize='large' style={{
-           color:'#00df9a'
-        }}></WhatsAppIcon>
+        <div
+          style={{
+            background: "white",
+          }}
+        >
+          <WhatsAppIcon
+            fontSize="large"
+            style={{
+              color: "#00df9a",
+            }}
+          ></WhatsAppIcon>
         </div>
       </div>
       <Footer />
 
-
-    
       <MobileNavbar />
-    
-        </div>
-    );
-}
+    </div>
+  );
+};
 
 export default Home;

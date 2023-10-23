@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 
 function Bookings() {
+  const [bookings, setBookings] = useState([]);
+
+  const getpaidList = async () => {
+    await fetch(
+      "https://wm-backend.connecturbanspa.repl.co/client/gaurav456@gmail.com/unpaidservices"
+    )
+      .then((res) => res.json())
+      .then((response) => {
+        setBookings(response);
+        console.log("Paid Services List", response);
+      })
+      .catch((error) => {
+        console.error("Error :", error);
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getpaidList();
+  }, []);
+
   return (
     <div>
       {/* Fixed Navbar */}
@@ -12,8 +33,43 @@ function Bookings() {
       </nav>
 
       {/* Page Content */}
-      <div className="p-4">
-        {/* Your content goes here */}
+      <div
+        // className="p-4"
+        style={{
+          marginTop: "100px",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {bookings?.map((booking) => {
+          return (
+            <div
+              style={{
+                background: "white",
+                padding: "20px",
+                marginTop: "10px",
+                width: "95%",
+              }}
+            >
+              <div>
+                <h1
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: "600",
+                  }}
+                >
+                  {booking?.service_title}
+                </h1>
+              </div>
+              <div>
+                <p>{booking?.service_desc}</p>
+                <h3>{booking?.price}</h3>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
