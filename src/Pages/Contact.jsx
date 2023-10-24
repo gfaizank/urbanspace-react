@@ -1,9 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Contact = () => {
-    return(
-        //#ffffff #1e2a38
-        <div className="bg-[#1e2a38] text-white py-10">  
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [responseMessage, setResponseMessage] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('https://wm-backend.connecturbanspa.repl.co/contactus', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setResponseMessage('Message sent successfully.');
+        // You can clear the form here if needed
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          message: '',
+        });
+      } else {
+        setResponseMessage('Failed to send the message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error sending the message:', error);
+      setResponseMessage('An error occurred. Please try again later.');
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  return (
+    <div className="bg-[#1e2a38] text-white py-10">
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-6">Contact Us</h1>
@@ -11,67 +58,78 @@ const Contact = () => {
         </div>
         <div className="flex flex-wrap -mx-4">
           <div className="w-full lg:w-1/2 px-4 mb-8">
-          <form className="w-full">
-  <div className="flex flex-wrap -mx-2 mb-4">
-    <div className="w-full lg:w-1/2 px-2 mb-4">
-      <input
-        className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
-        id="firstName"
-        name="firstName"
-        placeholder="First Name"
-        type="text"
-        required
-      />
-    </div>
-    <div className="w-full lg:w-1/2 px-2 mb-4">
-      <input
-        className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
-        id="lastName"
-        name="lastName"
-        placeholder="Last Name"
-        type="text"
-        required
-      />
-    </div>
-  </div>
-  <div className="flex flex-wrap -mx-2 mb-4">
-    <div className="w-full lg:w-1/2 px-2 mb-4">
-      <input
-        className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
-        id="email"
-        name="email"
-        placeholder="Email"
-        type="email"
-        required
-      />
-    </div>
-    <div className="w-full lg:w-1/2 px-2 mb-4">
-      <input
-        className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
-        id="phone"
-        name="phone"
-        placeholder="Phone Number"
-        type="tel"
-        required
-      />
-    </div>
-  </div>
-  <textarea
-    className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
-    id="message"
-    name="message"
-    placeholder="Your Message"
-    rows="5"
-    required
-  ></textarea>
-  <div className="mt-4">
-    <button className="bg-[#00df9a] hover:bg-[#00c088] text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]" type="submit">
-      Send
-    </button>
-  </div>
-</form>
-
-
+            <form className="w-full" onSubmit={handleSubmit}>
+              <div className="flex flex-wrap -mx-2 mb-4">
+                <div className="w-full lg:w-1/2 px-2 mb-4">
+                  <input
+                    className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="First Name"
+                    type="text"
+                    value={formData.firstName} // Controlled input
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="w-full lg:w-1/2 px-2 mb-4">
+                  <input
+                    className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Last Name"
+                    type="text"
+                    value={formData.lastName} // Controlled input
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap -mx-2 mb-4">
+                <div className="w-full lg:w-1/2 px-2 mb-4">
+                  <input
+                    className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    type="email"
+                    value={formData.email} // Controlled input
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="w-full lg:w-1/2 px-2 mb-4">
+                  <input
+                    className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
+                    id="phone"
+                    name="phone"
+                    placeholder="Phone Number"
+                    type="tel"
+                    value={formData.phone} // Controlled input
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+              <textarea
+                className="w-full border rounded-lg py-2 px-3 placeholder-gray-400 text-black focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]"
+                id="message"
+                name="message"
+                placeholder="Your Message"
+                rows="5"
+                value={formData.message} // Controlled input
+                onChange={handleChange}
+                required
+              ></textarea>
+              <div className="mt-4">
+                <button className="bg-[#00df9a] hover:bg-[#00c088] text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:ring focus:ring-[#00df9a] focus:border-[#00df9a]" type="submit">
+                  Send
+                </button>
+              </div>
+            </form>
+            {responseMessage && (
+              <div className="mt-4 text-white">{responseMessage}</div>
+            )}
           </div>
           <div className="w-full lg:w-1/2 px-4 mb-8 lg:flex lg:flex-col">
             <div className="w-full mb-4">
@@ -99,7 +157,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
-    );
-}
+  );
+};
 
 export default Contact;

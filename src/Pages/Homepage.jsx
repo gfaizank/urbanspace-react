@@ -21,6 +21,7 @@ const Home = () => {
   const [data,setData]=useState([]);
   const [searchData,setSearchData]=useState([]);
   const [searchQuery,setSearchQuery]=useState('')
+  
 
 
 const fetchReviews=async ()=>{
@@ -58,6 +59,7 @@ useEffect(()=>{
   search(searchQuery)
  }
 },[searchQuery])
+
 
     return (
         <div>
@@ -203,7 +205,7 @@ useEffect(()=>{
       
 
 
-      <div style={{
+      {/* <div style={{
         position:"fixed",
         right:10,
         bottom:"15%",
@@ -226,7 +228,48 @@ useEffect(()=>{
            color:'#00df9a'
         }}></WhatsAppIcon>
         </div>
-      </div>
+      </div> */}
+      <div
+  style={{
+    position: "fixed",
+    right: 10,
+    bottom: "15%",
+    display: "flex",
+    flexDirection: "column",
+  }}
+>
+  <a href="tel:8169943661" style={{ textDecoration: "none" }}>
+    <div
+      style={{
+        background: "white",
+        marginBottom: 5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <LocalPhoneIcon fontSize="large" style={{ color: "#000" }}></LocalPhoneIcon>
+    </div>
+  </a>
+  <a
+    href="https://wa.me/8169943661"
+    style={{ textDecoration: "none" }}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <div
+      style={{
+        background: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <WhatsAppIcon fontSize="large" style={{ color: "#00df9a" }}></WhatsAppIcon>
+    </div>
+  </a>
+</div>
+
       <Footer />
 
 
