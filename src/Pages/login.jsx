@@ -9,22 +9,35 @@ const LoginForm = () => {
     password: "",
   });
 
+  const getLogin = async () => {
+    // e.preventDefault();
+    await fetch("https://wm-backend.connecturbanspa.repl.co/client/getlogin")
+      .then((res) => res.json())
+      .then((response) => {
+        console.log("Get Login!", response);
+      })
+      .catch((error) => {
+        console.error("Error while calling getLogin:", error);
+        console.log(error);
+      });
+  };
+
   const login = async (e) => {
     e.preventDefault();
     await fetch("https://wm-backend.connecturbanspa.repl.co/client/login", {
       method: "POST",
-      credentials:'include',
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        // "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify(formData),
-      credentials:'include'
     })
       .then((res) => res.json())
       .then((response) => {
         console.log("Login successful!", response);
         toast("Login Success");
+        getLogin();
         setFormData({
           email: "",
           password: "",
@@ -36,23 +49,9 @@ const LoginForm = () => {
       });
   };
 
-  const getLogin = async () => {
-    // e.preventDefault();
-    await fetch("https://wm-backend.connecturbanspa.repl.co/client/getlogin", {
-    })
-      .then((res) => res.json())
-      .then((response) => {
-        console.log("Get Login!", response);
-      })
-      .catch((error) => {
-        console.error("Error while calling getLogin:", error);
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getLogin();
-  }, []);
+  // useEffect(() => {
+  //   getLogin();
+  // }, []);
 
   const handleChange = (e) => {
     // Update the corresponding field in the state
