@@ -2,12 +2,13 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Cookies from "js-cookie";
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [cookieValue, setCookieValue] = useState("");
 
   const login = async (e) => {
     e.preventDefault();
@@ -22,6 +23,8 @@ const LoginForm = () => {
       .then((res) => res.json())
       .then((response) => {
         console.log("Login successful!", response);
+
+        Cookies.set("userDetails", response, { expires: 7 });
         toast("Login Success");
         setFormData({
           email: "",
@@ -57,6 +60,23 @@ const LoginForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const readFromCookie = () => {
+    const valueFromCookie = Cookies.get("userDetails");
+    if (valueFromCookie) {
+      // setCookieValue(valueFromCookie);
+      const parsedData = cookieValue; // Deserialize JSON to an object
+      setCookieValue(parsedData);
+    } else {
+      setCookieValue("Cookie is empty");
+      console.log("Cookie is empty");
+    }
+  };
+
+  useEffect(() => {
+    readFromCookie();
+    // console.log(valueFromCookie);
+  }, []);
+
   return (
     //bg-[#1e2a38]
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8 bg-[11827] text-white">
@@ -78,7 +98,7 @@ const LoginForm = () => {
               htmlFor="email"
               className="block text-sm font-medium leading-6 text-[#00df9a]"
             >
-              Email address
+              Email address {cookieValue?.email}
             </label>
             <div className="mt-2">
               <input
