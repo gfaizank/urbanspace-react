@@ -60,23 +60,6 @@ const LoginForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const readFromCookie = () => {
-    const valueFromCookie = Cookies.get("userDetails");
-    if (valueFromCookie) {
-      // setCookieValue(valueFromCookie);
-      const parsedData = cookieValue; // Deserialize JSON to an object
-      setCookieValue(parsedData);
-    } else {
-      setCookieValue("Cookie is empty");
-      console.log("Cookie is empty");
-    }
-  };
-
-  useEffect(() => {
-    readFromCookie();
-    // console.log(valueFromCookie);
-  }, []);
-
   return (
     //bg-[#1e2a38]
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-1 lg:px-8 bg-[11827] text-white">
