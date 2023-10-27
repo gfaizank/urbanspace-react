@@ -17,8 +17,14 @@ import Banner from "../components/Banner";
 import Banner1Img from "../assets/banner1.jpeg";
 import Banner2Img from "../assets/banner2.jpeg";
 import MobileNavbar from "../components/MobileNavbar";
-
+import ClickOutside from "../components/ClickOutside";
 const Home = () => {
+  const [visible, setVisible] = useState(false);
+
+  const toggleText = () => {
+    setVisible((prev) => !prev);
+  };
+
   const [data, setData] = useState([]);
   const [searchData, setSearchData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -249,87 +255,95 @@ const Home = () => {
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <input
-            placeholder="Search something..."
-            style={{
-              padding: 10,
-              borderWidth: 1,
-              borderColor: "#fff",
-              width: "90%",
-              // borderRadius:5,
-              outline: "none",
-              fontWeight: "500",
-              fontSize: 15,
-            }}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-            }}
-            value={searchQuery}
-          ></input>
-          {searchData?.length < 1 && searchQuery.length > 0 ? (
-            <div
+          <ClickOutside onClick={toggleText}>
+            <input
+              placeholder="Search something..."
               style={{
-                width: "90%",
-                background: "white",
-                marginTop: 5,
+                padding: 10,
+                borderWidth: 1,
+                borderColor: "#fff",
+                width: "95%",
+                // borderRadius:5,
+                outline: "none",
+                fontWeight: "500",
+                fontSize: 15,
               }}
-            >
-              {
-                <h1
-                  style={{
-                    color: "#000",
-                    fontWeight: "500",
-                    fontSize: 15,
-                    padding: 10,
-                  }}
-                >
-                  No Result Found
-                </h1>
-              }
-            </div>
-          ) : (
-            <div
-              onClick={() => {
-                // setService(service.services);
-                setServiceDetails(true);
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setVisible(true);
               }}
-              style={{
-                width: "90%",
-                background: "white",
-                marginTop: 5,
-              }}
-            >
-              {searchData?.map((data, index) => {
-                return (
-                  <h1
-                    key={index}
+              value={searchQuery}
+            ></input>
+            {visible && (
+              <>
+                {searchData?.length < 1 && searchQuery.length > 0 ? (
+                  <div
                     style={{
-                      color: "#000",
-                      fontWeight: "500",
-                      fontSize: 15,
-                      padding: 10,
-                    }}
-                    onClick={() => {
-                      setService(data?.services);
-                      console.log(data);
+                      width: "95%",
+                      background: "white",
+                      marginTop: 5,
                     }}
                   >
-                    {data?.title}
-                  </h1>
-                );
-              })}
-            </div>
-          )}
+                    {
+                      <h1
+                        style={{
+                          color: "#000",
+                          fontWeight: "500",
+                          fontSize: 15,
+                          padding: 10,
+                        }}
+                      >
+                        No Result Found
+                      </h1>
+                    }
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => {
+                      // setService(service.services);
+                      setServiceDetails(true);
+                    }}
+                    style={{
+                      width: "95%",
+                      background: "white",
+                      marginTop: 5,
+                    }}
+                  >
+                    {searchData?.map((data, index) => {
+                      return (
+                        <h1
+                          key={index}
+                          style={{
+                            color: "#000",
+                            fontWeight: "500",
+                            fontSize: 15,
+                            padding: 10,
+                          }}
+                          onClick={() => {
+                            setService(data?.services);
+                            console.log(data);
+                          }}
+                        >
+                          {data?.title}
+                        </h1>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
+            )}
+          </ClickOutside>
         </div>
       ) : (
         <></>
       )}
       <Hero />
+
       {window.innerWidth < 500 ? (
         <div
           style={{
